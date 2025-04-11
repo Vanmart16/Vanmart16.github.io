@@ -50,10 +50,16 @@ jobs:
       - name: List container contents
         run: docker exec serving_base ls -la /usr/local/apache2/htdocs
 
+      - name: Debug secret values (safe)
+        run: |
+         echo "User: ${{ secrets.DOCKER_USER }}"
+         echo "Model: ${{ secrets.MODEL_NAME }}"
+
       - name: Build custom Docker image
         run: |
           docker commit --change "ENV MODEL_NAME=${{ secrets.MODEL_NAME }}" \
             serving_base ${{ secrets.DOCKER_USER }}/${{ secrets.MODEL_NAME }}:${{ github.sha }}
+      
 
       - name: Show Docker images
         run: docker images
